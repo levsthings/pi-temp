@@ -26,17 +26,16 @@ func main() {
 	mode := flag.String("mode", consoleMode, "Expected input: '--mode console' or '--mode log'")
 	flag.Parse()
 
-	o := format()
 	if *mode == logMode {
 		for {
-			write(o)
+			write(format())
 			rotate()
 
 			time.Sleep(time.Minute * 5)
 		}
 	}
 
-	fmt.Print(o)
+	fmt.Print(format())
 }
 
 func format() string {
