@@ -1,4 +1,4 @@
-package pistats
+package pitemp
 
 import (
 	"log"
