@@ -23,5 +23,5 @@ sudo python3 -m pip install --upgrade pip setuptools wheel
 ### Sample Output
 
 ```terminal
-18:53:41, Temp: 25.7°C Humidity: 32.2%
+18:53:41, Temp: 25.7°C, Humidity: 32.2%
 ```
