@@ -31,7 +31,7 @@ func format() string {
 	d := pitemp.GetData()
 
 	var (
-		tempFormat = `Temp: %.1f°C Humidity: %.1f%%`
+		tempFormat = `Temp: %.1f°C, Humidity: %.1f%%`
 		timeFormat = `%d:%d:%d`
 		logFormat  = "%s, %s\n"
 	)

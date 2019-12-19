@@ -16,7 +16,7 @@ type TempData struct {
 // GetData invokes a python script that talks to a GPIO line
 // and parses the output from stdin
 func GetData() TempData {
-	out, err := exec.Command("python3", "./python/temp.py").Output()
+	out, err := exec.Command("python3", "-c", py).Output()
 	if err != nil {
 		log.Fatal("couldn't read from temp.py")
 	}
