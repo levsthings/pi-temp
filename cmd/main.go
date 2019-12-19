@@ -36,7 +36,7 @@ func main() {
 		}
 	}
 
-	fmt.Println(o)
+	fmt.Print(o)
 }
 
 func format() string {
