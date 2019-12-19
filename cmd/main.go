@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -16,15 +17,26 @@ const (
 	logPath = dir + "/"
 	perms   = 0770
 	maxLogs = 7
+
+	consoleMode = "console"
+	logMode     = "log"
 )
 
 func main() {
-	for {
-		write(format())
-		rotate()
+	mode := flag.String("mode", consoleMode, "Expected input: '--mode console' or '--mode log'")
+	flag.Parse()
 
-		time.Sleep(time.Minute * 5)
+	o := format()
+	if *mode == logMode {
+		for {
+			write(o)
+			rotate()
+
+			time.Sleep(time.Minute * 5)
+		}
 	}
+
+	fmt.Println(o)
 }
 
 func format() string {
