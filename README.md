@@ -1,6 +1,6 @@
 # pi-temp
 
-A temperature logger for my Raspberry Pi.
+A temperature logger for my Raspberry Pi. It's still under development as I'm exploring native Go GPIO libraries.
 
 ### Details
 
@@ -17,7 +17,7 @@ sudo python3 -m pip install --upgrade pip setuptools wheel
 
 ### Installation & Running
 
-// TODO: Add installation methods
+**TODO: Add installation methods**
 
 
 ### Sample Output

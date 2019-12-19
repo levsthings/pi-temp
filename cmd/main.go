@@ -20,9 +20,7 @@ const (
 
 func main() {
 	for {
-		f := format()
-
-		write(f)
+		write(format())
 		rotate()
 
 		time.Sleep(time.Minute * 5)
