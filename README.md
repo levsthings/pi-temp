@@ -1,28 +1,44 @@
 # pi-temp
 
-A temperature logger for my Raspberry Pi. It's still under development as I'm exploring native Go GPIO libraries.
+
+A temperature and humidity logger for my Raspberry Pi. This project is still under development as I'm exploring native Go GPIO libraries.
 
 ### Details
 
-`pi-temp` runs in the background and probes for data every 5 minutes. By default, the data is saved on a daily log file and these daily logs are kept for 7 days 
+
+This project uses DHT22 temperature and humidity sensor to get relative temperature and humidity data. It uses the following wiring:
+
+```asm
+VDD <-> 10k OHM <-> DATA
+VDD  -> PIN 1
+DATA -> PIN 7
+NULL
+GND  -> PIN 6
+```
+
+`pi-temp` is intended to run in the background and it probes for data every 5 minutes. By default, the data is saved on a daily log file and these daily logs are kept for 7 days 
 before deletion. The logging can be swapped to a different system fairly easily like writing to a local or remote database instead of using local log files.
 
 ### Python Dependencies
 
+
+At the moment, `pi-temp` uses a Python script to interface to the sensor via GPIO as a proof of concept, so you need to make sure you have the following ready:
+
 ```terminal
-sudo apt-get update
 sudo apt-get install python3-pip
 sudo python3 -m pip install --upgrade pip setuptools wheel
 ```
 
 ### Installation
 
+
 You can download the latest binary from Github [releases](https://github.com/levsthings/pi-temp/releases). 
 
 ### Running
 
-If ran without any flags, the program will write the temperature data once to stdout and exit. If you supply the `--mode log` flag, the program will run
-in it's intended background mode writing a log file every 5 minutes infinitely.
+
+If `pi-temp` is ran without any flags, the program will write the temperature data once to stdout and exit. If you supply the `--mode log` flag, the program will run
+in it's intended background mode writing to a log file every 5 minutes until terminated.
 
 See usage:
 
@@ -32,11 +48,28 @@ Usage of pi-temp:
     	Expected input: '--mode console' or '--mode log' (default "console")
 ```
 
-You can run the binary yourself or add it to your startup routine via `systemd` or `rc.local`.The log outputs will automatically go to a directory named 
-`.pi-stats`, and will be wherever the binary is run. If you add it to your startup routine, pay attention to the execution context.
+You can run the binary manually or you can add it to your startup routine via `systemd` or `rc.local`.The log outputs will automatically go to a directory named 
+`.pi-temp`, and will be wherever the binary is run. If you add it to your startup routine, pay attention to the execution context.
 
 ### Sample Output
 
+
 ```terminal
 18:53:41, Temp: 25.7°C, Humidity: 32.2%
+```
+
+
+### Replacing the formatter/logger
+
+
+You can import `pi-temp` as a library and use the raw data to feed your own formatter and logger:
+
+```go
+package main
+
+import pitemp "github.com/levsthings/pi-temp"
+
+func main() {
+    data := pitemp.GetData()
+}
 ```
