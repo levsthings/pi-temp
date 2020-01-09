@@ -44,6 +44,7 @@ func format() string {
 			err,
 			"couldn't get temp data from pitemp",
 		})
+		os.Exit(1)
 	}
 
 	var (
