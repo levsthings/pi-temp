@@ -1,7 +1,7 @@
 # pi-temp
 
 
-A temperature and humidity logger for my Raspberry Pi. This project is still under development as I'm exploring native Go GPIO libraries.
+A temperature and humidity sensor for my Raspberry Pi.
 
 ### Details
 
@@ -16,13 +16,10 @@ NULL
 GND  -> PIN 6
 ```
 
-`pi-temp` is intended to run in the background and it probes for data every 5 minutes. By default, the data is saved on a daily log file and these daily logs are kept for 7 days 
-before deletion. The logging can be swapped to a different system fairly easily like writing to a local or remote database instead of using local log files.
-
 ### Python Dependencies
 
 
-At the moment, `pi-temp` uses a Python script to interface to the sensor via GPIO as a proof of concept, so you need to make sure you have the following ready:
+At the moment, `pi-temp` uses a Python script to interface with the sensor via GPIO as a proof of concept (and the due to accuracy issues with existing Go libraries), so you need to make sure you need to install python dependencies:
 
 ```terminal
 sudo apt-get install python3-pip
@@ -55,7 +52,7 @@ func main() {
 `pi-temp` comes with an example program that lives in the `example` folder which can be built and used for local logging or getting console outputs.
 
 If `pi-temp` is ran without any flags, the program will write the temperature data once to stdout and exit. If you supply the `--mode log` flag, the program will run
-in it's intended background mode writing to a log file every 5 minutes until terminated.
+in it's intended background mode writing to a log file every 5 minutes until terminated. By default, the data is saved on a daily log file and these daily logs are kept for 7 days before deletion. The logging can be swapped to a different system fairly easily like writing to a local or remote database instead of using local log files.
 
 See usage:
 
