@@ -34,8 +34,25 @@ sudo python3 -m pip install --upgrade pip setuptools wheel
 
 You can download the latest binary from Github [releases](https://github.com/levsthings/pi-temp/releases). 
 
-### Running
 
+### Usage
+
+
+You can import `pi-temp` as a library and use the raw data to feed your own formatter and logger:
+
+```go
+package main
+
+import pitemp "github.com/levsthings/pi-temp"
+
+func main() {
+    data := pitemp.GetData()
+}
+```
+
+### Example Program
+
+`pi-temp` comes with an example program that lives in the `example` folder which can be built and used for local logging or getting console outputs.
 
 If `pi-temp` is ran without any flags, the program will write the temperature data once to stdout and exit. If you supply the `--mode log` flag, the program will run
 in it's intended background mode writing to a log file every 5 minutes until terminated.
@@ -51,25 +68,10 @@ Usage of pi-temp:
 You can run the binary manually or you can add it to your startup routine via `systemd` or `rc.local`.The log outputs will automatically go to a directory named 
 `.pi-temp`, and will be wherever the binary is run. If you add it to your startup routine, pay attention to the execution context.
 
-### Sample Output
+#### Sample Output
 
 
 ```terminal
 18:53:41, Temp: 25.7°C, Humidity: 32.2%
 ```
 
-
-### Replacing the formatter/logger
-
-
-You can import `pi-temp` as a library and use the raw data to feed your own formatter and logger:
-
-```go
-package main
-
-import pitemp "github.com/levsthings/pi-temp"
-
-func main() {
-    data := pitemp.GetData()
-}
-```

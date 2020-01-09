@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"sort"
 	"time"
@@ -43,13 +42,10 @@ func format() string {
 
 	var (
 		tempFormat = `Temp: %.1f°C, Humidity: %.1f%%`
-		timeFormat = `%d:%d:%d`
 		logFormat  = "%s, %s\n"
 	)
 
-	h, m, s := time.Now().Clock()
-
-	ti := fmt.Sprintf(timeFormat, h, m, s)
+	ti := time.Now().Format("15:04:05")
 	te := fmt.Sprintf(tempFormat, d.Temperature, d.Humidity)
 	log := fmt.Sprintf(logFormat, ti, te)
 
@@ -66,22 +62,38 @@ func write(d string) {
 
 	f, err := os.OpenFile(logPath+t, os.O_APPEND|os.O_CREATE|os.O_WRONLY, perms)
 	if err != nil {
-		log.Fatal(err)
+		pitemp.LogFatal(pitemp.ErrorOutput{
+			err,
+			"couldn't open temp log file",
+		})
+		os.Exit(1)
 	}
 
 	if _, err := f.Write(v); err != nil {
-		log.Fatal(err)
+		pitemp.LogFatal(pitemp.ErrorOutput{
+			err,
+			"couldn't write to temp log file",
+		})
+		os.Exit(1)
 	}
 
 	if err := f.Close(); err != nil {
-		log.Fatal(err)
+		pitemp.LogFatal(pitemp.ErrorOutput{
+			err,
+			"couldn't close temp log file",
+		})
+		os.Exit(1)
 	}
 }
 
 func rotate() {
 	logs, err := ioutil.ReadDir(dir)
 	if err != nil {
-		log.Fatal("couldn't rotate logs", err)
+		pitemp.LogFatal(pitemp.ErrorOutput{
+			err,
+			"couldn't rotate logs",
+		})
+		os.Exit(1)
 	}
 
 	if len(logs) > maxLogs {
@@ -93,7 +105,11 @@ func rotate() {
 
 		err := os.Remove(logPath + logs[0].Name())
 		if err != nil {
-			log.Println("error deleting oldest log", err)
+			pitemp.LogFatal(pitemp.ErrorOutput{
+				err,
+				"couldn't delete oldest log file",
+			})
+			os.Exit(1)
 		}
 	}
 }

@@ -1,7 +1,7 @@
 package pitemp
 
 import (
-	"log"
+	"os"
 	"os/exec"
 	"strconv"
 	"strings"
@@ -18,7 +18,11 @@ type TempData struct {
 func GetData() TempData {
 	out, err := exec.Command("python3", "-c", py).Output()
 	if err != nil {
-		log.Fatal("couldn't read from python script")
+		LogFatal(ErrorOutput{
+			err,
+			"couldn't read from python script",
+		})
+		os.Exit(1)
 	}
 
 	t := strings.TrimSuffix(string(out), "\n")
@@ -29,7 +33,12 @@ func GetData() TempData {
 		spl := strings.Split(str, "=")
 		f, err := strconv.ParseFloat(spl[1], 64)
 		if err != nil {
-			log.Fatal("couldn't parse output from python script")
+			LogFatal(ErrorOutput{
+				err,
+				"couldn't parse output from python script",
+			})
+
+			os.Exit(1)
 		}
 		d[i] = f
 	}
