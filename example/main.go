@@ -32,7 +32,6 @@ func main() {
 					err,
 					"couldn't get temp data from pi-temp",
 				})
-				os.Exit(1)
 			}
 			write(format(d))
 			rotate()
