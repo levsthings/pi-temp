@@ -14,7 +14,7 @@ import (
 const (
 	dir     = ".pi-temp"
 	logPath = dir + "/"
-	perms   = 0644
+	perms   = 0664
 	maxLogs = 7
 
 	consoleMode = "console"
