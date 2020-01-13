@@ -14,7 +14,6 @@ import (
 const (
 	dir     = ".pi-temp"
 	logPath = dir + "/"
-	perms   = 0664
 	maxLogs = 7
 
 	consoleMode = "console"
@@ -70,7 +69,7 @@ func write(d string) {
 	v := []byte(d)
 
 	if _, err := os.Stat(dir); os.IsNotExist(err) {
-		err := os.Mkdir(dir, perms)
+		err := os.Mkdir(dir, 0755)
 		if err != nil {
 			logError(errorOutput{
 				Error:   err,
@@ -79,7 +78,7 @@ func write(d string) {
 		}
 	}
 
-	f, err := os.OpenFile(logPath+t, os.O_APPEND|os.O_CREATE|os.O_WRONLY, perms)
+	f, err := os.OpenFile(logPath+t, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		logError(errorOutput{
 			err,

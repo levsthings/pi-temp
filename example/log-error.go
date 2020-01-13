@@ -14,6 +14,7 @@ type errorOutput struct {
 
 // Log error builds an error using errorOutput and attempts to log it
 // to disk, and exits with error code.
+
 func logError(e errorOutput) {
 	filename := "pi-temp.error.log"
 
@@ -21,7 +22,7 @@ func logError(e errorOutput) {
 	s := fmt.Sprintf("time=%q, level=fatal, error=%q, msg=%q\n", t, e.Error, e.Message)
 	b := []byte(s)
 
-	f, err := os.OpenFile(filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, perms)
+	f, err := os.OpenFile(filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		log.Fatal(err)
 	}
