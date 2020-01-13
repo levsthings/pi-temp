@@ -18,7 +18,7 @@ type TempData struct {
 func GetData() (*TempData, error) {
 	out, err := exec.Command("python3", "-c", py).Output()
 	if err != nil {
-		return nil, errors.New("Couldn't read from python function")
+		return nil, errors.New("couldn't read from python function")
 	}
 
 	t := strings.TrimSuffix(string(out), "\n")
