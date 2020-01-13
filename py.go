@@ -10,7 +10,6 @@ Read DHT sensor of specified sensor type (DHT11, DHT22, or AM2302) on
     of (None, None) is returned. The delay between retries is by default 2
     seconds, but can be overridden.
 */
-
 const py = `
 import Adafruit_DHT
 
