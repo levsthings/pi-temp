@@ -14,7 +14,7 @@ import (
 const (
 	dir     = ".pi-temp"
 	logPath = dir + "/"
-	perms   = 0770
+	perms   = 0644
 	maxLogs = 7
 
 	consoleMode = "console"
@@ -27,26 +27,32 @@ func main() {
 
 	if *mode == logMode {
 		for {
-			write(format())
+			d, err := pitemp.GetData()
+			if err != nil {
+				logError(errorOutput{
+					err,
+					"couldn't get temp data from pi-temp",
+				})
+				os.Exit(1)
+			}
+			write(format(d))
 			rotate()
 
 			time.Sleep(time.Minute * 5)
 		}
 	}
 
-	fmt.Print(format())
+	if d, err := pitemp.GetData(); err != nil {
+		logError(errorOutput{
+			err,
+			"couldn't get temp data from pi-temp",
+		})
+	} else {
+		fmt.Print(format(d))
+	}
 }
 
-func format() string {
-	d, err := pitemp.GetData()
-	if err != nil {
-		logFatal(errorOutput{
-			err,
-			"couldn't get temp data from pitemp",
-		})
-		os.Exit(1)
-	}
-
+func format(d *pitemp.TempData) string {
 	var (
 		tempFormat = `Temp: %.1f°C, Humidity: %.1f%%`
 		logFormat  = "%s, %s\n"
@@ -64,43 +70,45 @@ func write(d string) {
 	v := []byte(d)
 
 	if _, err := os.Stat(dir); os.IsNotExist(err) {
-		os.Mkdir(dir, perms)
+		err := os.Mkdir(dir, perms)
+		if err != nil {
+			logError(errorOutput{
+				Error:   err,
+				Message: "couldn't create log folder",
+			})
+		}
 	}
 
 	f, err := os.OpenFile(logPath+t, os.O_APPEND|os.O_CREATE|os.O_WRONLY, perms)
 	if err != nil {
-		logFatal(errorOutput{
+		logError(errorOutput{
 			err,
 			"couldn't open temp log file",
 		})
-		os.Exit(1)
 	}
 
 	if _, err := f.Write(v); err != nil {
-		logFatal(errorOutput{
+		logError(errorOutput{
 			err,
 			"couldn't write to temp log file",
 		})
-		os.Exit(1)
 	}
 
 	if err := f.Close(); err != nil {
-		logFatal(errorOutput{
+		logError(errorOutput{
 			err,
 			"couldn't close temp log file",
 		})
-		os.Exit(1)
 	}
 }
 
 func rotate() {
 	logs, err := ioutil.ReadDir(dir)
 	if err != nil {
-		logFatal(errorOutput{
+		logError(errorOutput{
 			err,
 			"couldn't rotate logs",
 		})
-		os.Exit(1)
 	}
 
 	if len(logs) > maxLogs {
@@ -112,11 +120,10 @@ func rotate() {
 
 		err := os.Remove(logPath + logs[0].Name())
 		if err != nil {
-			logFatal(errorOutput{
+			logError(errorOutput{
 				err,
 				"couldn't delete oldest log file",
 			})
-			os.Exit(1)
 		}
 	}
 }

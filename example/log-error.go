@@ -12,10 +12,12 @@ type errorOutput struct {
 	Message string
 }
 
-func logFatal(e errorOutput) {
-	filename := "pitemp-error.log"
+// Log error builds an error using errorOutput and attempts to log it
+// to disk, and exits with error code.
+func logError(e errorOutput) {
+	filename := "pi-temp.error.log"
 
-	t := time.Now().Format("15:04:05")
+	t := time.Now().Format("02-01-2006 15:04:05")
 	s := fmt.Sprintf("time=%q, level=fatal, error=%q, msg=%q\n", t, e.Error, e.Message)
 	b := []byte(s)
 
@@ -31,4 +33,6 @@ func logFatal(e errorOutput) {
 	if err := f.Close(); err != nil {
 		log.Fatal(err)
 	}
+
+	os.Exit(1)
 }
