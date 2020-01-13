@@ -41,14 +41,14 @@ func main() {
 		}
 	}
 
-	if d, err := pitemp.GetData(); err != nil {
+	d, err := pitemp.GetData()
+	if err != nil {
 		logError(errorOutput{
 			err,
 			"couldn't get temp data from pi-temp",
 		})
-	} else {
-		fmt.Print(format(d))
 	}
+	fmt.Print(format(d))
 }
 
 func format(d *pitemp.TempData) string {
